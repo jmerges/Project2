@@ -6,8 +6,11 @@ for i = 0:9
 end
 
 
-A = zeros(28,28);
-for i = 1:28
-    A (:,i) = T(1,(28*i-1)+1:(28*i));
+for i = 0:9
+    A = zeros(28,28);
+    for j = 1:28
+        A (j,:) = T(i+1,(28*(j-1))+1:(28*j));
+    end
+    subplot(2,5,i+1)
+    image(A);
 end
-image(A)
