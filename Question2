@@ -1,3 +1,5 @@
+% PROBLEM 2
+
 f = load('mnist_all.mat');
 T = zeros(10,784);
 for i = 0:9
