@@ -1,1 +1,6 @@
-
+f = load('mnist_all.mat');
+T = zeros(10,784);
+for i = 0:9
+    x = f.(sprintf('train%d', i));
+    T(i+1,:) = mean(x);
+end
