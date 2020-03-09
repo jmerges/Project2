@@ -1,0 +1,23 @@
+classdef Network
+    properties
+        numLayers
+        hiddenLayer
+        neurons
+        weight
+    end
+    methods
+        function obj = Network(input, layers)
+            obj.numLayers = layers;
+            obj.hiddenLayer = zeros(784,numLayers);
+            obj.weight = rand(784,784);
+            for l = 2:layers
+                obj.weight(:,:,l) = rand(784,784);
+            normal_inp = double(input)*(.99/255)+.01;
+            normal_inp = normal_inp(:);
+            for i = 1:784
+                obj.hiddenLayer(i,1)=sum(normal_inp(:)*obj.weight(:,i,1));
+            end
+            for n = 2:layers
+                for j = 1:784
+                    obj.hiddenLayer(j,n)=sum(obj.hiddenLayer(:,n-1)*obj.weight(:,j,n));
+   
