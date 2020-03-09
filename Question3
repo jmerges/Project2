@@ -1,14 +1,12 @@
 % QUESTION 3 - NEURON
 classdef Neuron
     properties
-        Weight
         NET
         OUT
         
     end
     methods
         function obj = Neuron(o,w)
-            obj.Weight=w;
             obj.NET = sum(o(:).*w(:));
             obj.OUT = 1/(1+exp(-obj.NET));
         end
