@@ -1,4 +1,4 @@
-classdef Network
+classdef Network        %Neural Network Class
     properties
         numLayers
         hiddenLayer
@@ -6,15 +6,15 @@ classdef Network
         weight
     end
     methods
-        function obj = Network(input, layers)
-            obj.numLayers = layers;
-            obj.hiddenLayer = zeros(784,numLayers);
+        function obj = Network(input, layers)       %Neural Network Constructor Function:
+            obj.numLayers = layers;                 %Takes 2 arguments: 'input', a vector containing a number from MNIST
+            obj.hiddenLayer = zeros(784,numLayers); % and 'layers', which will specify the number of hidden layers.
             obj.weight = rand(784,784);
-            for l = 2:layers
+            for l = 2:layers                        %initialize random weights
                 obj.weight(:,:,l) = rand(784,784);
-            normal_inp = double(input)*(.99/255)+.01;
-            normal_inp = normal_inp(:);
-            for i = 1:784
+            normal_inp = double(input)*(.99/255)+.01;   %normalize the input vector, assuming the max is 255
+            normal_inp = normal_inp(:);                 %column vector
+            for i = 1:784                           %initialize first hidden layer from input * weights
                 obj.hiddenLayer(i,1)=sum(normal_inp(:)*obj.weight(:,i,1));
             end
             for n = 2:layers
