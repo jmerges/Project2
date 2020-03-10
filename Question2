@@ -15,4 +15,8 @@ for i = 0:9
     end
     subplot(2,5,i+1)
     image(A);
+    colormap gray;
+    title(i)
+    xticks([])
+    yticks([])
 end
