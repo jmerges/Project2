@@ -20,11 +20,16 @@ classdef Network
             end
             for n = 2:layers
                 for j = 1:784
-                    obj.hiddenInput(j,n)=sum(obj.neurons(:,n-1).OUT.*obj.weight(:,j,n));
+                    total=0;
+                    for k = 1:784
+                        total=total+obj.neurons(k,n-1).OUT*obj.weight(k,j,n);
+                    end
+                    obj.hiddenInput(j,n)=total;
                     obj.neurons(j,n)=modifyNeuron(obj.neurons(j,n),obj.hiddenInput(j,n));
                 end
             end
         end
     end
 end
+
 
