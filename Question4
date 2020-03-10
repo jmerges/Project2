@@ -1,23 +1,29 @@
-classdef Network        %Neural Network Class
+classdef Network
     properties
         numLayers
-        hiddenLayer
+        hiddenInput
         neurons
         weight
     end
     methods
-        function obj = Network(input, layers)       %Neural Network Constructor Function:
-            obj.numLayers = layers;                 %Takes 2 arguments: 'input', a vector containing a number from MNIST
-            obj.hiddenLayer = zeros(784,numLayers); % and 'layers', which will specify the number of hidden layers.
-            obj.weight = rand(784,784);
-            for l = 2:layers                        %initialize random weights
-                obj.weight(:,:,l) = rand(784,784);
-            normal_inp = double(input)*(.99/255)+.01;   %normalize the input vector, assuming the max is 255
-            normal_inp = normal_inp(:);                 %column vector
-            for i = 1:784                           %initialize first hidden layer from input * weights
-                obj.hiddenLayer(i,1)=sum(normal_inp(:)*obj.weight(:,i,1));
+        function obj = Network(input, layers)
+            obj.numLayers = layers;
+            obj.hiddenInput = zeros(784,obj.numLayers);
+            obj.weight = rand(784,784,obj.numLayers);
+            obj.neurons (1:784,1:obj.numLayers) = Neuron;
+            
+            normal_inp = double(input)*(.99/255)+.01;
+            normal_inp = normal_inp(:);
+            for i = 1:784
+                obj.hiddenInput(i,1)=sum(normal_inp(:)*obj.weight(:,i,1));
+                obj.neurons(i,1)=modifyNeuron(obj.neurons(i,1),obj.hiddenInput(i,1));
             end
             for n = 2:layers
                 for j = 1:784
-                    obj.hiddenLayer(j,n)=sum(obj.hiddenLayer(:,n-1)*obj.weight(:,j,n));
-   
+                    obj.hiddenInput(j,n)=sum(obj.hiddenInput(:,n-1)*obj.weight(:,j,n));
+                    obj.neurons(j,n)=modifyNeuron(obj.neurons(j,n),obj.hiddenInput(j,n));
+                end
+            end
+        end
+    end
+end
