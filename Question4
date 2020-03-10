@@ -2,7 +2,7 @@ classdef Network
     properties
         numLayers
         hiddenInput
-        neurons
+        neurons = Neuron
         weight
     end
     methods
@@ -15,15 +15,16 @@ classdef Network
             normal_inp = double(input)*(.99/255)+.01;
             normal_inp = normal_inp(:);
             for i = 1:784
-                obj.hiddenInput(i,1)=sum(normal_inp(:)*obj.weight(:,i,1));
+                obj.hiddenInput(i,1)=sum(normal_inp(:).*obj.weight(:,i,1));
                 obj.neurons(i,1)=modifyNeuron(obj.neurons(i,1),obj.hiddenInput(i,1));
             end
             for n = 2:layers
                 for j = 1:784
-                    obj.hiddenInput(j,n)=sum(obj.hiddenInput(:,n-1)*obj.weight(:,j,n));
+                    obj.hiddenInput(j,n)=sum(obj.neurons(:,n-1).OUT.*obj.weight(:,j,n));
                     obj.neurons(j,n)=modifyNeuron(obj.neurons(j,n),obj.hiddenInput(j,n));
                 end
             end
         end
     end
 end
+
