@@ -1,14 +1,12 @@
-% QUESTION 3 - NEURON
 classdef Neuron
     properties
         NET
-        OUT
-        
+        OUT  
     end
     methods
-        function obj = Neuron(o,w)
-            obj.NET = sum(o(:).*w(:));
-            obj.OUT = 1/(1+exp(-obj.NET));
+        function obj = modifyNeuron(inp)
+            obj.NET = double(inp);
+            obj.OUT = 1/(1+exp(-1*obj.NET));
         end
     end
 end
