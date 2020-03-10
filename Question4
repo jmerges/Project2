@@ -4,13 +4,15 @@ classdef Network
         hiddenInput
         neurons = Neuron
         weight
+        output
     end
     methods
         function obj = Network(input, layers)
             obj.numLayers = layers;
             obj.hiddenInput = zeros(784,obj.numLayers);
-            obj.weight = rand(784,784,obj.numLayers);
+            obj.weight = (rand(784,784,obj.numLayers)-.5)/5;
             obj.neurons (1:784,1:obj.numLayers) = Neuron;
+            obj.output = zeros(784,1);
             
             normal_inp = double(input)*(.99/255)+.01;
             normal_inp = normal_inp(:);
@@ -28,8 +30,9 @@ classdef Network
                     obj.neurons(j,n)=modifyNeuron(obj.neurons(j,n),obj.hiddenInput(j,n));
                 end
             end
+            for l = 1:784
+                obj.output(l) = obj.neurons(l,obj.numLayers).OUT;
+            end
         end
     end
 end
-
-
