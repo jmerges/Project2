@@ -4,8 +4,8 @@ classdef Neuron
         OUT  
     end
     methods
-        function obj = modifyNeuron(inp)
-            obj.NET = double(inp);
+        function obj = modifyNeuron(obj, inp)
+            obj.NET = inp;
             obj.OUT = 1/(1+exp(-1*obj.NET));
         end
     end
