@@ -40,5 +40,30 @@ classdef Network
             obj.outNeuron = modifyNeuron(obj.outNeuron,total_2);
             obj.output = obj.outNeuron.OUT;
         end
+        function obj = Reverse_Pass(obj,target)
+            nu=0.01;
+            delta = zeros(784,obj.numHiddenLayers);
+            error_0 = abs(target-obj.output);
+            delta_0 = obs.output*(1-obs.output)*error_0;
+            
+            for i = 1:784
+                obj.outWeight(i) = obj.outWeight(i)+(nu*delta_0*obj.neurons(i,obj.numHiddenLayers).OUT);
+                delta(i,obj.numHiddenLayers) = obj.neurons(i,obj.numHiddenLayers).OUT*(1-obj.neurons(i,obj.numHiddenLayers).OUT)*delta_0*obj.outWeight(i);
+            end
+            for l = 1:784
+                obj.weight(l,:,obj.numHiddenLayers) = obj.weight(l,:,obj.numHiddenLayers)+nu*(delta(:,obj.numHiddenLayers)')*obj.neurons(l,obj.numHiddenLayers-1).OUT;
+            end
+            for n = 2:obj.numHiddenLayers
+                for j = 1:784
+                    delta(j,obj.numHiddenLayers-n+1) = obj.neurons(j,obj.numHiddenLayers-n+1).OUT*(1-obj.neurons(j,obj.numHiddenLayers-n+1).OUT)*obj.weight(j,:,obj.numHiddenLayers-n+2)*delta(:,obj.numHiddenLayers-n+2);
+                end
+                for m = 1:784
+                    if n < obj.numHiddenLayers
+                        obj.weight(m,:,obj.numHiddenLayers-n+1) = obj.weight(m,:,obj.numHiddenLayers-n+1)+nu*(delta(:,obj.numHiddenLayers-n+1)')*obj.neurons(m,obj.numHiddenLayers-n).OUT;
+                    else
+                    end
+                end
+            end
+        end
     end
 end
