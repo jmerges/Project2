@@ -1,18 +1,21 @@
 classdef Network
     properties
-        numLayers
+        numHiddenLayers
         hiddenInput
         neurons = Neuron
         weight
+        outWeight
+        outNeuron
         output
     end
     methods
         function obj = Network(input, layers)
-            obj.numLayers = layers;
-            obj.hiddenInput = zeros(784,obj.numLayers);
-            obj.weight = (rand(784,784,obj.numLayers)-.5)/5;
-            obj.neurons (1:784,1:obj.numLayers) = Neuron;
-            obj.output = zeros(784,1);
+            obj.numHiddenLayers = layers;
+            obj.hiddenInput = zeros(784,obj.numHiddenLayers);
+            obj.weight = (rand(784,784,obj.numHiddenLayers)-.5)/5;
+            obj.outWeight = (rand(784,1)-.5)/5;
+            obj.neurons (1:784,1:obj.numHiddenLayers) = Neuron;
+            obj.outNeuron = Neuron;
             
             normal_inp = double(input)*(.99/255)+.01;
             normal_inp = normal_inp(:);
@@ -22,17 +25,20 @@ classdef Network
             end
             for n = 2:layers
                 for j = 1:784
-                    total=0;
+                    total_1=0;
                     for k = 1:784
-                        total=total+obj.neurons(k,n-1).OUT*obj.weight(k,j,n);
+                        total_1=total_1+obj.neurons(k,n-1).OUT*obj.weight(k,j,n);
                     end
-                    obj.hiddenInput(j,n)=total;
+                    obj.hiddenInput(j,n)=total_1;
                     obj.neurons(j,n)=modifyNeuron(obj.neurons(j,n),obj.hiddenInput(j,n));
                 end
             end
+            total_2 = 0;
             for l = 1:784
-                obj.output(l) = obj.neurons(l,obj.numLayers).OUT;
+                total_2 = total_2+obj.neurons(l,obj.numHiddenLayers).OUT*obj.outWeight(l);
             end
+            obj.outNeuron = modifyNeuron(obj.outNeuron,total_2);
+            obj.output = obj.outNeuron.OUT;
         end
     end
 end
