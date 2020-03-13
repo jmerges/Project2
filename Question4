@@ -23,7 +23,7 @@ classdef Network
                 obj.hiddenInput(i,1)=sum(normal_inp(:).*obj.weight(:,i,1));
                 obj.neurons(i,1)=modifyNeuron(obj.neurons(i,1),obj.hiddenInput(i,1));
             end
-            for n = 2:layers
+            for n = 2:obj.numHiddenLayers
                 for j = 1:784
                     total_1=0;
                     for k = 1:784
@@ -40,11 +40,14 @@ classdef Network
             obj.outNeuron = modifyNeuron(obj.outNeuron,total_2);
             obj.output = obj.outNeuron.OUT;
         end
-        function obj = Reverse_Pass(obj,target)
-            nu=0.01;
+        function obj = Reverse_Pass(obj,input,target)
+            nu=0.1;
             delta = zeros(784,obj.numHiddenLayers);
             error_0 = abs(target-obj.output);
-            delta_0 = obs.output*(1-obs.output)*error_0;
+            delta_0 = obj.output*(1-obj.output)*error_0;
+            
+            normal_inp = double(input)*(.99/255)+.01;
+            normal_inp = normal_inp(:);
             
             for i = 1:784
                 obj.outWeight(i) = obj.outWeight(i)+(nu*delta_0*obj.neurons(i,obj.numHiddenLayers).OUT);
@@ -61,11 +64,38 @@ classdef Network
                     if n < obj.numHiddenLayers
                         obj.weight(m,:,obj.numHiddenLayers-n+1) = obj.weight(m,:,obj.numHiddenLayers-n+1)+nu*(delta(:,obj.numHiddenLayers-n+1)')*obj.neurons(m,obj.numHiddenLayers-n).OUT;
                     else
-                        %same thing as above, but instead of neuron.OUT we
-                        %will use the input vector as the OUTs
+                        obj.weight(m,:,1) = obj.weight(m,:,1)+nu*(delta(:,1)'*normal_inp(m));
                     end
                 end
             end
+        end
+        function obj = Test(obj,input,target)
+            normal_inp = double(input)*(.99/255)+.01;
+            normal_inp = normal_inp(:);
+            
+            for i = 1:784
+                obj.hiddenInput(i,1)=sum(normal_inp(:).*obj.weight(:,i,1));
+                obj.neurons(i,1)=modifyNeuron(obj.neurons(i,1),obj.hiddenInput(i,1));
+            end
+            for n = 2:obj.numHiddenLayers
+                for j = 1:784
+                    total_1=0;
+                    for k = 1:784
+                        total_1=total_1+obj.neurons(k,n-1).OUT*obj.weight(k,j,n);
+                    end
+                    obj.hiddenInput(j,n)=total_1;
+                    obj.neurons(j,n)=modifyNeuron(obj.neurons(j,n),obj.hiddenInput(j,n));
+                end
+            end
+            total_2 = 0;
+            for l = 1:784
+                total_2 = total_2+obj.neurons(l,obj.numHiddenLayers).OUT*obj.outWeight(l);
+            end
+            obj.outNeuron = modifyNeuron(obj.outNeuron,total_2);
+            obj.output = obj.outNeuron.OUT;
+            
+            disp('Error equals:');
+            disp(abs(target-obj.output));
         end
     end
 end
