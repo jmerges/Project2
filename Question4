@@ -12,8 +12,8 @@ classdef Network
         function obj = Network(input, layers)
             obj.numHiddenLayers = layers;
             obj.hiddenInput = zeros(784,obj.numHiddenLayers);
-            obj.weight = (rand(784,784,obj.numHiddenLayers)-.5)/5;
-            obj.outWeight = (rand(784,1)-.5)/5;
+            obj.weight = (rand(784,784,obj.numHiddenLayers)-.5)/40;
+            obj.outWeight = (rand(784,1)-.5)/28;
             obj.neurons (1:784,1:obj.numHiddenLayers) = Neuron;
             obj.outNeuron = Neuron;
             
