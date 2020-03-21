@@ -12,12 +12,12 @@ classdef Network
         function obj = Network(input, layers)
             obj.numHiddenLayers = layers;
             obj.hiddenInput = zeros(784,obj.numHiddenLayers);
-            obj.weight = (rand(784,784,obj.numHiddenLayers)-.5)/40;
-            obj.outWeight = (rand(784,1)-.5)/28;
+            obj.weight = (rand(784,784,obj.numHiddenLayers)-.5)/5;
+            obj.outWeight = (rand(784,1)-.5)/3;
             obj.neurons (1:784,1:obj.numHiddenLayers) = Neuron;
             obj.outNeuron = Neuron;
             
-            normal_inp = double(input)*(.99/255)+.01;
+            normal_inp = double(input)*(.98/255)+.01;
             normal_inp = normal_inp(:);
             for i = 1:784
                 obj.hiddenInput(i,1)=sum(normal_inp(:).*obj.weight(:,i,1));
@@ -43,10 +43,10 @@ classdef Network
         function obj = Reverse_Pass(obj,input,target)
             nu=0.1;
             delta = zeros(784,obj.numHiddenLayers);
-            error_0 = abs(target-obj.output);
+            error_0 = target-obj.output;
             delta_0 = obj.output*(1-obj.output)*error_0;
             
-            normal_inp = double(input)*(.99/255)+.01;
+            normal_inp = double(input)*(.98/255)+.01;
             normal_inp = normal_inp(:);
             
             for i = 1:784
@@ -70,7 +70,7 @@ classdef Network
             end
         end
         function obj = Test(obj,input,target)
-            normal_inp = double(input)*(.99/255)+.01;
+            normal_inp = double(input)*(.98/255)+.01;
             normal_inp = normal_inp(:);
             
             for i = 1:784
