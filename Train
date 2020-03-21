@@ -5,13 +5,16 @@ n=Reverse_Pass(n,f.train0(1,:),1);
 for k = 1:500
     for j = 1:9
         target=0;
+        %if j == 0
+            %target=1;
+        %end
         for i = 1:2
-            n=Test(n,f.train0(i*500-499,:),1);
-            n=Reverse_Pass(n,f.train0(i*500-499,:),1);
+            n=Test(n,f.train0(i*500-500+k,:),1);
+            n=Reverse_Pass(n,f.train0(i*500-500+k,:),1);
         end
         for i = 1:2
-            n=Test(n,f.(sprintf('train%d', j))(i*500-499,:),target);
-            n=Reverse_Pass(n,f.(sprintf('train%d', j))(i*500-499,:),target);
+            n=Test(n,f.(sprintf('train%d', j))(i*500-500+k,:),target);
+            n=Reverse_Pass(n,f.(sprintf('train%d', j))(i*500-500+k,:),target);
             disp([i k j]);
         end
     end
